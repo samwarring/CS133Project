@@ -1,4 +1,4 @@
-TARBALL_FILES = Makefile readme.txt src/
+TARBALL_FILES = Makefile readme.txt src/ bin/
 TARBALL_NAME = 18.tgz
 
 all:
