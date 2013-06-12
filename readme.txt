@@ -1,17 +1,17 @@
 src/
-	mri/        all mri code
-		omp/     mri_omp sources
-			mri.omp.txt	mri_omp project write-up
-			...
-		mpi/     mri_mpi sources
-			mri.mpi.txt	mri_mpi project write-up
-			...
-		ocl/     mri_ocl sources
-			mri.ocl.txt	mri_ocl project write-up
-			...
-	denoise/    all denoise code
+ mri/             all mri code
+	omp/           mri_omp sources
+ 	 mri.omp.txt	mri_omp project write-up
+	 ...
+	mpi/           mri_mpi sources
+	 mri.mpi.txt	mri_mpi project write-up
+  	 ...
+	ocl/           mri_ocl sources
+	 mri.ocl.txt	mri_ocl project write-up
+	 ...
+ denoise/         all denoise code
 		...
-	seg/        all segmentation code
+ seg/             all segmentation code
 		...
 
 To make all binaries, invoke 'make.'
