@@ -1,18 +1,67 @@
-Sam Warring
-903 943 125
+Steven La
+503-929-466
 
-I parallelized the mri reconstruction program by parallelizing the dft and
-idft functions with two kernels each. Each function consisted of two main
-steps. The first writes to the tmp matrix, and the second writes to the dst
-matrix. In my OpenCL implementation, each of these steps were implemented as
-separate kernels. They required the creation of 6 buffer-objects: src, tmp,
-dst, w1, w2, and one more to hold the matrix dimensions.
+I made one kernel of the main contents of each iteration (where we write to
+curv). This is where most of the computation happens with all of the floating
+point arithmetic so I figured it would make a good kernel. The kernel operates
+on a per-pixel basis, where each call to the function will compute the value
+for one pixel.
 
-The speedups in the table below are very impressive, but as of this writing,
-my OpenCL implementation produces fuzzier images than the sequential version.
+I passed into the kernel all the buffers needed to compute the pixel's value
+as constants, with the curv buffer passed as a global. After each computation,
+the host program gathers all of the data from the devices sequentially for the
+next iteration of the loop to use.
 
-  NAME          OPENCL   SEQUENTIAL  SPEEDUP
-chest.dat       4.302s   1m36.608s    22.4
-coronal.dat     4.220s   1m22.636s    19.5
-flower.dat      6.954s   2m38.751s    22.8
-phantom.dat     6.776s   2m34.436s    22.7
+The bottleneck in my implementation is with the sequential read and write from
+curv. We can see in the results that larger files have more significant
+speedups because of this; more time is spent doing the computation and not
+communicating with each other.
+
+600 iterations
+
+Sequential
+----------
+
+BRAIN
+
+real    0m19.221s
+user    0m19.066s
+sys     0m0.023s
+CORONAL
+
+real    0m0.576s
+user    0m0.568s
+sys     0m0.001s
+PHANTOM
+
+real    0m1.260s
+user    0m1.240s
+sys     0m0.003s
+
+
+OpenCL
+------
+
+BRAIN
+
+real    0m7.242s
+user    0m38.588s
+sys     0m1.584s
+CORONAL
+
+real    0m0.838s
+user    0m4.410s
+sys     0m0.656s
+PHANTOM
+
+real    0m0.821s
+user    0m3.905s
+sys     0m0.548s
+
+
+Speedups
+--------
+
+BRAIN: 2.65x
+CORONAL: 0.69x
+PHANTOM: 1.53x
