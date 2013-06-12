@@ -1,19 +1,61 @@
-Sam Warring
-903 943 125
+Steven La
+503-929-466
 
-I concentrated my efforts on the dft and idft functions. Both functions are
-parallelized in the same manner. I divided the work so that each process
-writes to a contiguous set of columns in the final dst matrix. To make the
-communication simpler, each process actually writes to the transpose-dst
-matrix; the transpose is gathered then each process performs another
-transpose individually.
+With MPI, I split the image into np slices and I have each thread do
+calculations on its own slice. The catch is that if we slice the phi buffer
+into np slices, the calculations wouldn't be able to access the values of phi
+outside of the slice the thread has. To solve this, I made each thread's phi
+slice two columns larger than the normal slice width. Instead of using
+MPI_Scatter and MPI_Allgather, I used more low level MPI_Send and MPI_Recv to
+send only the edges of the slices to the bonus columns in other threads. This
+kept communication overhead at a minimum, since each thread wouldn't need
+information about ALL other thread's image.
 
-I also made it so the first loop writes to the transpose-tmp matrix. This
-makes the writing portion in the first loop slower, but it speeds up the
-reading in the second loop due to spacial locality.
+The bottleneck here is communication. Even though it's little, each thread
+has to transfer data to its adjacent threads for every iteration.
 
-  NAME          2 THREADS     4 THREADS     8 THREADS    16 THREADS
-chest.dat         51.640s      25.529s       16.558s      19.405s  
-coronal.dat       43.402s      22.731s       13.390s      13.899s
-flower.dat      1m17.830s      39.942s       24.512s      20.960s
-phantom.dat     1m16.600s      39.852s       26.146s      20.472s
+With MPI, I got little to no differences in the output compared to sequential
+
+Sequential
+
+BRAIN
+
+real    0m14.872s
+user    0m14.806s
+sys     0m0.008s
+CORONAL
+
+real    0m0.578s
+user    0m0.569s
+sys     0m0.000s
+PHANTOM
+
+real    0m0.997s
+user    0m0.988s
+sys     0m0.002s
+
+
+MPI
+
+BRAIN
+
+real    0m6.072s
+user    0m28.043s
+sys     0m13.776s
+CORONAL
+
+real    0m1.438s
+user    0m2.286s
+sys     0m1.989s
+PHANTOM
+
+real    0m1.695s
+user    0m3.507s
+sys     0m2.849s
+
+
+We can see that for large files (brain.bmp) and high iterations (600), the
+speedup is 2.44x. However for smaller files (coronal.bmp and phantom.bmp),
+there is no speedup. This is because of the high communication overhead with
+MPI. With a larger file, more time will be spent doing the actual computation
+and will therefore the cores will be busy more of the time.
