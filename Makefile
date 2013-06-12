@@ -5,6 +5,9 @@ all:
 	make -C src/mri/omp/
 	make -C src/mri/mpi/
 	make -C src/mri/ocl/
+	make -C src/seg/omp/
+	make -C src/seg/mpi/
+	make -C src/seg/ocl/
 
 clean:
 	rm bin/*
