@@ -1,12 +1,12 @@
 BIN_DIR      = ../../../bin
 
-MRI_OCL_BIN  = $(BIN_DIR)/mri_ocl
+OCL_BIN  = $(BIN_DIR)/seg_ocl
 
-MRI_OCL_SRCS = mri_main.c \
-               mri_ocl.c  \
+OCL_SRCS = seg_main.c \
+               seg.c  \
 					util.c
 
 all:
 	ioc64 -cmd=build -input=kernels.cl
 	cp kernels.cl $(BIN_DIR)/
-	gcc -O3 -std=c99 -o $(MRI_OCL_BIN) $(MRI_OCL_SRCS) -lm -lOpenCL
+	gcc -O3 -std=c99 -o $(OCL_BIN) $(OCL_SRCS) -lm -lOpenCL
