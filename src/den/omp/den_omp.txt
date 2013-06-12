@@ -1,0 +1,27 @@
+Zach North
+603 885 768
+
+My OpenMP implementation is fairly straightforward: I simply invoked a
+parallel for loop over the main loop in the sequential function.
+
+One thing that I did change was the Converged check -- I changed it to use
+a pointer instead of an int. This was so the seperate threads could share
+the pointer and then check for convergence inside their respective control --
+if they found an instance of the algorithm not converging, they could change the
+Convergence variable without using a break statement.
+
+The fact that I was able to perform nearly every calculation inside OpenMP threads
+caused this function to be quite performant. I estimate it was roughly 2x as fast
+as the sequential code, although at my time of writing this report the servers
+are under heavy load and the numbers are not very accurate.
+
+To speed this function up I would look at parallelizing the g loop -- the one that
+initializes the g array. I couldn't get this to work but it is a large, O(N*M) 
+loop that is being run sequentially. If it could be split up the function would
+as a whole run much faster.
+
+To speed it up further, I would probably look at splitting up the u array to 
+avoid parallel memory accesses -- perhaps using more memory in order to copy
+pieces of it around for seperate threads. But, this can lead to problems because
+it accesses data "UP", "DOWN", etc. The iterations on the "overlap" would
+still have to wait on each other.

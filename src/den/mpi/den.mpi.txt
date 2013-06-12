@@ -1,0 +1,31 @@
+Zach North
+603 885 768
+
+I implemented MPI without the fancy functions like Allgather or Scatter, simply
+because I didn't really understand how they worked. A faster way for me was to 
+use the MPI_Send and MPI_Recv functions, because they were simpler.
+
+Basically I split up the image by rows. My threads get their current thread ID
+and then use it to calculate which rows they are responsible for in the image.
+They run the denoise calculations on these rows and then finish, calling
+MPI_Send to send their results to the root thread (ID 0.)
+
+The root thread loops and waits for the results from every thread, only
+continuing when they have all come in. It runs a check for convergence
+(sequentially) and then continues if the denoise algo has not converged yet.
+
+This is an immediate bottleneck that I couldn't find out how to get around --
+an O(M*N) sequential part of the system, the check for convergence. A better
+way to do it would be to have each indiv thread check seperately and then
+if any one thread reported that it was not converging, continue the 
+loop. However I couldn't figure out how to do this and in the end just
+took it out of the threaded part entirely.
+
+Speed wise, the function isn't that fast -- I timed it at roughly the same
+speed as the sequential operation. I think this is probably due to the fact that
+I spent a long time checking convergence outside of the loop, which was inefficient.
+If I could find a way to make that work in parallel my function would see speeds 
+increase.
+
+The correctness is good, I found very small differences in tests with the various
+pictures.

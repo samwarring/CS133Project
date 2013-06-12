@@ -1,0 +1,15 @@
+Zach North 
+603 885 768
+
+I simply couldn't get this function to work. I tried for hours and could not get any 
+correct results out of it. 
+
+The main structure I believe is correct -- two seperate kernels, one to calculate
+g and one to calculate u -- but nothing I do seems to have any effect on u.
+I've tried a million different combinations of OpenCL code and literally nothing
+causes the output image to have any change whatsoever.
+
+I feel like I'm approaching the problem wrong, but that's on me I guess.
+
+My kernels are located in the /bin folder at the top level of this project
+folder, for what its worth I feel they are entirely correct.
