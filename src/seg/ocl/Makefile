@@ -7,6 +7,5 @@ OCL_SRCS = seg_main.c \
 					util.c
 
 all:
-	ioc64 -cmd=build -input=kernels.cl
 	cp kernels.cl $(BIN_DIR)/
 	gcc -O3 -std=c99 -o $(OCL_BIN) $(OCL_SRCS) -lm -lOpenCL
