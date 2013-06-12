@@ -25,3 +25,20 @@ avoid parallel memory accesses -- perhaps using more memory in order to copy
 pieces of it around for seperate threads. But, this can lead to problems because
 it accesses data "UP", "DOWN", etc. The iterations on the "overlap" would
 still have to wait on each other.
+
+Some sample numbers:
+Time with sequential implementation:
+
+real    0m0.669s
+user    0m0.659s
+sys 0m0.002s
+
+Time with OpenMP implementation:
+real   0m0.662s
+user   0m0.651s
+sys    0m0.019s
+
+This was during a period of heavy server load, however, so I take those
+numbers with a grain of salt. Generally the OpenMP code was running faster
+than the sequential implementation.
+

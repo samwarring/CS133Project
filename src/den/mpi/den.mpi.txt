@@ -29,3 +29,20 @@ increase.
 
 The correctness is good, I found very small differences in tests with the various
 pictures.
+
+
+Some sample numbers for MPI:
+
+body.bmp, with sequential implementation:
+real    0m0.775s
+user    0m0.680s
+sys     0m0.002s
+
+body.bmp, with MPI implementation:
+real    0m0.669s
+user    0m0.659s
+sys     0m0.021s
+
+This was run at a period of heavy server load, so I would probably check the
+numbers again before calling them correct, however.
+
