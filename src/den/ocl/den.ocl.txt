@@ -10,3 +10,6 @@ I've tried a million different combinations of OpenCL code and literally nothing
 causes the output image to have any change whatsoever.
 
 I feel like I'm approaching the problem wrong, but that's on me I guess.
+
+My kernels are located in the /bin folder at the top level of this project
+folder, for what its worth I feel they are entirely correct.
