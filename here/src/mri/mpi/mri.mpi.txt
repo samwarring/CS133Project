@@ -1,0 +1,19 @@
+Sam Warring
+903 943 125
+
+I concentrated my efforts on the dft and idft functions. Both functions are
+parallelized in the same manner. I divided the work so that each process
+writes to a contiguous set of columns in the final dst matrix. To make the
+communication simpler, each process actually writes to the transpose-dst
+matrix; the transpose is gathered then each process performs another
+transpose individually.
+
+I also made it so the first loop writes to the transpose-tmp matrix. This
+makes the writing portion in the first loop slower, but it speeds up the
+reading in the second loop due to spacial locality.
+
+  NAME          2 THREADS     4 THREADS     8 THREADS    16 THREADS
+chest.dat         51.640s      25.529s       16.558s      19.405s  
+coronal.dat       43.402s      22.731s       13.390s      13.899s
+flower.dat      1m17.830s      39.942s       24.512s      20.960s
+phantom.dat     1m16.600s      39.852s       26.146s      20.472s
